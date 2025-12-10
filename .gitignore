@@ -211,3 +211,7 @@ node_modules/
 
 # PG backups
 backups/
+
+# dotenvx
+.env.keys
+!.env.production

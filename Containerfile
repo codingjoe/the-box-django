@@ -20,11 +20,14 @@ ENV UV_COMPILE_BYTECODE=1
 # Install Python and dependencies
 WORKDIR /app
 RUN --mount=type=cache,target=/root/.cache/uv --mount=type=bind,source=./uv.lock,target=uv.lock --mount=type=bind,source=./pyproject.toml,target=pyproject.toml uv sync --frozen --no-install-project --no-editable
-COPY .. /app
+COPY . /app
 RUN --mount=type=cache,target=/root/.cache/uv uv sync --frozen --no-editable
 
 
 FROM gcr.io/distroless/cc:nonroot AS development
+
+# Dotenvx
+COPY --from=dotenv/dotenvx:v1.51.1 /usr/local/bin/dotenvx /bin
 
 # Copy binary dependencies
 COPY --from=build /dpkg /
@@ -39,8 +42,10 @@ ENV PATH="/opt/venv/bin:$PATH"
 
 WORKDIR /app
 
-ENTRYPOINT ["python"]
+ENTRYPOINT ["dotenvx", "run", "--env-file=.env", "--", "python"]
 
 FROM development AS production
 
-COPY .. /app
+COPY containers/web /app
+
+ENTRYPOINT ["dotenvx", "run", "--env-file=.env.production", "--", "python"]

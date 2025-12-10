@@ -4,40 +4,14 @@ on:
     - cron: '0 0 * * *' # Sync daily at midnight
   workflow_dispatch: # Allow manual trigger
 concurrency:
-  group: pg-backup
+  group: backup
   cancel-in-progress: false
 jobs:
   pg_dump:
-    if: vars.SSH_HOSTNAME != ''
-    name: PostgreSQL
-    runs-on: ubuntu-latest
-    environment:
-      name: production
-      url: https://${{ vars.HOSTNAME }}/
-    concurrency: production
-    env: ${{ secrets }}
-    steps:
-      - uses: actions/checkout@v6
-      - uses: webfactory/ssh-agent@v0.9.1
-        with:
-          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
-      - name: Pin known hosts
-        run: |
-          echo "::group::Pinning known hosts"
-          echo "${{ vars.SSH_KNOWN_HOSTS }}" >> ~/.ssh/known_hosts
-          echo "::debug::Known hosts updated:"
-          cat ~/.ssh/known_hosts
-          echo "::endgroup::"
-      - name: Setting up Docker context for remote deployment
-        run: |
-          docker context create production --description "Production Server" --docker "host=ssh://github@${{ vars.SSH_HOSTNAME }}"
-          docker context use production
-          touch .env
-      - name: Capture Postgres backup
-        run: docker compose exec postgres /usr/bin/pg_dump -Rc -U postgres postgres > backup.dump
-        env: ${{ vars }}
-      - name: Upload Postgres backup artifact
-        uses: actions/upload-artifact@v5
-        with:
-          name: backup.dump
-          path: backup.dump
+    uses: codingjoe/the-box/.github/workflows/backup.yml@main
+    with:
+      SSH_HOSTNAME: ${{ vars.SSH_HOSTNAME }}
+      SSH_KNOWN_HOSTS: ${{ vars.SSH_KNOWN_HOSTS }}
+      HOSTNAME: ${{ vars.HOSTNAME }}
+    secrets:
+      SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
