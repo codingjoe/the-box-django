@@ -1,0 +1,14 @@
+# https://docs.github.com/en/code-security/dependabot/dependabot-version-updates/configuration-options-for-the-dependabot.yml-file
+version: 2
+updates:
+  - package-ecosystem: github-actions
+    directory: "/"
+    schedule:
+      interval: daily
+  - package-ecosystem: docker
+    directories:
+      - "/containers/paas"
+      - "/containers/web/node"
+      - "/containers/web/python"
+    schedule:
+      interval: daily
