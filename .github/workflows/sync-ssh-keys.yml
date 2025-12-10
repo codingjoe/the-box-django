@@ -19,7 +19,6 @@ jobs:
     with:
       SSH_HOSTNAME: ${{ vars.SSH_HOSTNAME }}
       SSH_KNOWN_HOSTS: ${{ vars.SSH_KNOWN_HOSTS }}
-      HOSTNAME: ${{ vars.HOSTNAME }}
     secrets:
       SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
       GH_TOKEN: ${{ github.token }}
