@@ -215,3 +215,6 @@ backups/
 # dotenvx
 .env.keys
 !.env.production
+
+# pre-commit.ci
+.pre-commit-autoupdate.log
