@@ -20,7 +20,6 @@ repos:
       - id: no-commit-to-branch
         args: [--branch, main]
       - id: detect-private-key
-        exclude: 'fizard/app/services/finapi/openapi/access/api.yaml'
   - repo: https://github.com/asottile/pyupgrade
     rev: v3.21.2
     hooks:

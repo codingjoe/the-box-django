@@ -7,8 +7,6 @@ updates:
       interval: daily
   - package-ecosystem: docker
     directories:
-      - "/containers/paas"
-      - "/containers/web/node"
-      - "/containers/web/python"
+      - "/"
     schedule:
       interval: daily

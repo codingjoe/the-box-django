@@ -1,7 +1,23 @@
 include:
-  - path:
-      - containers/web/compose.yml
-      - containers/web/python/compose.yml
-      - containers/compose.smtp.yml
-      - containers/compose.postgres.yml
-      - containers/compose.redis.yml
+  - oci://docker.io/codingjoe/the-box-postgres:latest
+  - oci://docker.io/codingjoe/the-box-redis:latest
+services:
+  web:
+    pull_policy: build
+    image: !reset
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: ${TARGET:-production}
+      args:
+        UV_NO_DEV: 0
+    restart: unless-stopped
+    command: ["-m", "gunicorn", "demo.wsgi:application", "--bind", "0.0.0.0:${PORT:-8000}", "--workers", "4", "--threads", "2", "--timeout", "30"]
+    healthcheck:
+      test: ["CMD", "python", "-m", "manage", "health_check", "health", "localhost:${PORT:-8000}"]
+      interval: 10s
+      retries: 5
+      start_period: 30s
+      timeout: 10s
+    labels:
+      caddy.reverse_proxy.health_uri: "/health/"
