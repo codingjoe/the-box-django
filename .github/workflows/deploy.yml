@@ -28,4 +28,4 @@ jobs:
           ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
           hostname: ${{ vars.HOSTNAME }}
           dotenv-private-key: ${{ secrets.DOTENV_PRIVATE_KEY_PRODUCTION }}
-          project-name: ${{ jobs.paas.environment }}
+          project-name: ${{ github.event.inputs.environment || 'production' }}
