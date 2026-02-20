@@ -13,13 +13,10 @@ concurrency:
   cancel-in-progress: false
 jobs:
   paas:
-    uses: codingjoe/the-box/.github/workflows/deploy.yml@main
+    uses: codingjoe/the-box/actions/deploy@main
     with:
-      SSH_HOSTNAME: ${{ vars.SSH_HOSTNAME }}
-      SSH_KNOWN_HOSTS: ${{ vars.SSH_KNOWN_HOSTS }}
-      HOSTNAME: ${{ vars.HOSTNAME }}
-      CADDY_OAUTH_CLIENT_ID: ${{ vars.CADDY_OAUTH_CLIENT_ID }}
-    secrets:
-      SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
-      CADDY_OAUTH_CLIENT_SECRET: ${{ secrets.CADDY_OAUTH_CLIENT_SECRET }}
-      DOTENV_PRIVATE_KEY_PRODUCTION: ${{ secrets.DOTENV_PRIVATE_KEY_PRODUCTION }}
+      ssh-hosts: ${{ vars.SSH_HOSTNAME }}
+      ssh-known-hosts: ${{ vars.SSH_KNOWN_HOSTS }}
+      ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+      hostname: ${{ vars.HOSTNAME }}
+      dotenv-private-key: ${{ secrets.DOTENV_PRIVATE_KEY_PRODUCTION }}
