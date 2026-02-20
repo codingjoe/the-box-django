@@ -87,7 +87,7 @@ DATABASES = {"default": env.db(default="sqlite:///db.sqlite3")}
 # Caches
 # https://docs.djangoproject.com/en/6.0/ref/settings/#caches
 
-CACHES = {"default": env.cache("REDIS_URL", default="locmem://")}
+CACHES = {"default": env.cache("REDIS_URL", default="locmemcache://")}
 
 
 REDIS_URL = env.cache("REDIS_URL", default="redis://")
