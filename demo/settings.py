@@ -82,12 +82,15 @@ WSGI_APPLICATION = "demo.wsgi.application"
 # Database
 # https://docs.djangoproject.com/en/6.0/ref/settings/#databases
 
-DATABASES = {"default": env.db()}
+DATABASES = {"default": env.db(default="sqlite:///db.sqlite3")}
 
 # Caches
 # https://docs.djangoproject.com/en/6.0/ref/settings/#caches
 
-CACHES = {"default": env.cache("REDIS_URL")}
+CACHES = {"default": env.cache("REDIS_URL", default="locmem://")}
+
+
+REDIS_URL = env.cache("REDIS_URL", default="redis://")
 
 
 # Password validation

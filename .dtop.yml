@@ -1,3 +1,2 @@
 hosts:
-  - host: local
-    dozzle: https://logs.localhost/
+  - host: ssh://collaborator@demo.the-box.sh

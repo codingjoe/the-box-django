@@ -15,9 +15,11 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 
+from django.conf import settings
 from django.contrib import admin
 from django.urls import path
 from health_check.views import HealthCheckView
+from redis.asyncio import Redis
 
 urlpatterns = [
     path(
@@ -29,6 +31,10 @@ urlpatterns = [
                 "health_check.Storage",
                 "health_check.contrib.psutil.Disk",
                 "health_check.contrib.psutil.Memory",
+                (
+                    "health_check.contrib.redis.Redis",
+                    {"client_factory": lambda: Redis(settings.REDIS_URL)},
+                ),
             ]
         ),
         name="home",
