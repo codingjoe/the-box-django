@@ -47,6 +47,8 @@ ENTRYPOINT ["dotenvx", "run", "--env-file=.env", "--", "python"]
 
 FROM build AS compile
 
+RUN apt-get install -y gettext
+
 COPY ./ /app
 
 # Compile message files
