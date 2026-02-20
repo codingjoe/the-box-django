@@ -18,7 +18,7 @@ jobs:
     steps:
       - uses: codingjoe/the-box/actions/deploy@main
         with:
-          ssh-hosts: ${{ vars.SSH_HOSTNAME }}
+          ssh-host: ${{ vars.SSH_HOSTNAME }}
           ssh-known-hosts: ${{ vars.SSH_KNOWN_HOSTS }}
           ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
           hostname: ${{ vars.HOSTNAME }}
