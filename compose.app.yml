@@ -11,11 +11,11 @@ services:
       target: ${TARGET:-production}
       args:
         UV_NO_DEV: 0
-    restart: unless-stopped
     environment:
       HOSTNAME: ${HOSTNAME:-localhost}
       GRANIAN_INTERFACE: asgi # Options: asgi, wsgi, rsgi (default)
       GRANIAN_LOG_ACCESS_ENABLED: true
+      GRANIAN_WORKERS: ${WEB_CONCURRENCY:-2}
       GRANIAN_LOG_ACCESS_FMT: '{"addr": "%(addr)s", "time": "%(time)s", "dt_ms": %(dt_ms)f, "status": %(status)d, "path": "%(path)s", "query_string": "%(query_string)s", "method": "%(method)s", "scheme": "%(scheme)s", "protocol": "%(protocol)s"}' # JSON format
     command: ["-m", "granian", "--port", "${PORT:-8000}", "--host", "0.0.0.0", "demo.asgi:application"]
     healthcheck:
