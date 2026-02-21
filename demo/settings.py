@@ -94,7 +94,7 @@ DATABASES = {"default": env.db(default="sqlite:///db.sqlite3")}
 CACHES = {"default": env.cache("REDIS_URL", default="locmemcache://")}
 
 
-REDIS_URL = env.cache("REDIS_URL", default="redis://")
+REDIS_URL = env.url("REDIS_URL", default="redis:///")
 
 
 # Password validation
