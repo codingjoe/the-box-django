@@ -26,9 +26,6 @@ RUN --mount=type=cache,target=/root/.cache/uv uv sync --frozen --no-editable
 
 FROM gcr.io/distroless/cc:nonroot AS development
 
-# Dotenvx
-COPY --from=dotenv/dotenvx:v1.51.1 /usr/local/bin/dotenvx /bin
-
 # Copy binary dependencies
 COPY --from=build /dpkg /
 
@@ -43,7 +40,7 @@ ENV PORT=8000
 
 WORKDIR /app
 
-ENTRYPOINT ["dotenvx", "run", "--env-file=.env", "--", "python"]
+ENTRYPOINT ["python"]
 
 FROM build AS compile
 
@@ -65,4 +62,4 @@ COPY --from=compile /app/demo/locale /app/demo/locale
 COPY --from=compile /app/staticfiles /app/staticfiles
 
 WORKDIR /app
-ENTRYPOINT ["dotenvx", "run", "--env-file=.env.production", "--", "python"]
+ENTRYPOINT ["python"]

@@ -33,7 +33,7 @@ urlpatterns = [
                 "health_check.contrib.psutil.Memory",
                 (
                     "health_check.contrib.redis.Redis",
-                    {"client_factory": lambda: Redis(settings.REDIS_URL)},
+                    {"client_factory": lambda: Redis.from_url(settings.REDIS_URL)},
                 ),
             ]
         ),
