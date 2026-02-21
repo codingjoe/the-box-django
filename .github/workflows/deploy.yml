@@ -29,3 +29,4 @@ jobs:
           hostname: ${{ vars.HOSTNAME }}
           dotenv-private-key: ${{ secrets.DOTENV_PRIVATE_KEY_PRODUCTION }}
           project-name: ${{ github.event.inputs.environment || 'production' }}
+          file: compose.app.yml
