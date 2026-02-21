@@ -32,3 +32,4 @@ services:
     restart: no
     command: ["-m", "manage", "migrate", "--noinput"]
     deploy: !reset
+    labels: !reset
