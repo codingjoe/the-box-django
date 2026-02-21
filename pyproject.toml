@@ -11,4 +11,5 @@ dependencies = [
     "gunicorn>=25.1.0",
     "psycopg[binary]>=3.3.3",
     "redis>=7.2.0",
+    "whitenoise>=6.11.0",
 ]
