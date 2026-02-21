@@ -26,3 +26,9 @@ services:
       timeout: 10s
     labels:
       caddy.reverse_proxy.health_uri: "/health/"
+  migration:
+    extends:
+      service: web
+    restart: no
+    command: ["-m", "manage", "migrate", "--noinput"]
+    deploy: !reset

@@ -10,14 +10,14 @@ on:
   workflow_dispatch: # Allow manual trigger
     inputs:
       environment:
-        description: 'Target environment for syncing SSH keys'
+        description: 'Target environment for deployment'
         required: true
         default: 'production'
 concurrency:
   group: ${{ github.head_ref || github.run_id }}
   cancel-in-progress: false
 jobs:
-  paas:
+  app:
     runs-on: ubuntu-latest
     environment: ${{ github.event.inputs.environment || 'production' }}
     steps:
