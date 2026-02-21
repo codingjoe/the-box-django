@@ -12,9 +12,11 @@ services:
       args:
         UV_NO_DEV: 0
     restart: unless-stopped
+    environment:
+      HOSTNAME: ${HOSTNAME:-localhost}
     command: ["-m", "gunicorn", "demo.wsgi:application", "--bind", "0.0.0.0:${PORT:-8000}", "--workers", "4", "--threads", "2", "--timeout", "30"]
     healthcheck:
-      test: ["CMD", "python", "-m", "manage", "health_check", "health", "localhost:${PORT:-8000}"]
+      test: ["CMD", "python", "-m", "manage", "health_check", "health", "localhost:${PORT:-8000}", "--forwarded-host", "${HOSTNAME:-localhost}", "--forwarded-proto", "https"]
       interval: 10s
       retries: 5
       start_period: 30s
