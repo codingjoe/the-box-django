@@ -21,7 +21,7 @@ jobs:
     runs-on: ubuntu-latest
     environment:
       name: ${{ github.event.inputs.environment || 'production' }}
-      url: https:${{ case(github.ref == 'refs/heads/main', vars.HOSTNAME, format('{0}.{1}', github.event.ref_name, vars.HOSTNAME)) }}
+      url: https://${{ case(github.ref == 'refs/heads/main', vars.HOSTNAME, format('{0}.{1}', github.event.ref_name, vars.HOSTNAME)) }}
     steps:
       - uses: codingjoe/the-box/actions/deploy@main
         with:
