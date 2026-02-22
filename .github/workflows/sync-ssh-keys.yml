@@ -1,4 +1,4 @@
-name: The Box | Sync SSH Keys
+name: 📦 | Sync SSH Keys
 on:
   schedule:
     - cron: '0 * * * *' # Sync hourly

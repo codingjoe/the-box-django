@@ -1,4 +1,4 @@
-name: The Box | Delete Deployment
+name: 📦 | Prune Application
 on:
   delete:
     branches:

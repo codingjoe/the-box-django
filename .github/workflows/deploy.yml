@@ -1,4 +1,4 @@
-name: The Box | Deploy Application
+name: 📦 | Deploy Application
 on:
   workflow_run:
     workflows: [ci]
