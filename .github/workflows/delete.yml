@@ -15,7 +15,7 @@ concurrency:
 jobs:
   delete:
     name: Prune ${{ github.event.ref || github.ref_name }} application
-    if: ((github.event.ref || github.ref_name) == 'main' || github.ref_protected) == false
+    if: (endsWith(github.event.ref || github.ref_name, 'main') || github.ref_protected) == false
     runs-on: ubuntu-latest
     environment:
       name: ${{ github.event.inputs.environment || 'production' }}
