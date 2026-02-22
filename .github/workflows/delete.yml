@@ -8,18 +8,21 @@ on:
         description: 'Target environment for deletion'
         required: true
         default: 'production'
+concurrency:
+  group: ${{ github.ref_name || github.run_id }}
+  cancel-in-progress: true
 jobs:
   app:
     runs-on: ubuntu-latest
     environment:
       name: ${{ github.event.inputs.environment || 'production' }}
-      url: https://${{ case(github.ref == 'refs/heads/main', vars.HOSTNAME, format('{0}.{1}', github.event.ref_name, vars.HOSTNAME)) }}
+      url: https://${{ case(github.ref_name == 'main', vars.HOSTNAME, format('{0}.{1}', github.ref_name, vars.HOSTNAME)) }}
     steps:
       - uses: codingjoe/the-box/actions/delete@main
         with:
           ssh-host: ${{ vars.SSH_HOSTNAME }}
           ssh-known-hosts: ${{ vars.SSH_KNOWN_HOSTS }}
           ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
-          hostname: ${{ case(github.ref == 'refs/heads/main', vars.HOSTNAME, format('{0}.{1}', github.event.ref_name, vars.HOSTNAME)) }}
+          hostname: ${{ case(github.ref_name == 'main', vars.HOSTNAME, format('{0}.{1}', github.ref_name, vars.HOSTNAME)) }}
           dotenv-private-key: ${{ secrets.DOTENV_PRIVATE_KEY_PRODUCTION }}
           environment: ${{ github.event.inputs.environment || 'production' }}
