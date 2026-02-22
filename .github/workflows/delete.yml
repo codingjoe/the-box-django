@@ -14,7 +14,7 @@ concurrency:
   cancel-in-progress: true
 jobs:
   delete:
-    if: github.ref_protected == false # Only run if the branch is not protected
+    if: (github.ref_name == 'main' || github.ref_protected) == false
     name: Prune ${{ github.head_ref || github.ref_name }} application
     runs-on: ubuntu-latest
     environment:
