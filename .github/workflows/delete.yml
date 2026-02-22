@@ -13,17 +13,19 @@ concurrency:
   group: ${{ github.ref_name || github.run_id }}
   cancel-in-progress: true
 jobs:
-  app:
+  delete:
+    if: github.ref_protected == false # Only run if the branch is not protected
+    name: Prune ${{ github.head_ref || github.ref_name }} application
     runs-on: ubuntu-latest
     environment:
       name: ${{ github.event.inputs.environment || 'production' }}
-      url: https://${{ case(github.ref_name == 'main', vars.HOSTNAME, format('{0}.{1}', github.ref_name, vars.HOSTNAME)) }}
+      url: https://${{ format('{0}.{1}', github.head_ref || github.ref_name, vars.HOSTNAME) }}
     steps:
       - uses: codingjoe/the-box/actions/delete@main
         with:
           ssh-host: ${{ vars.SSH_HOSTNAME }}
           ssh-known-hosts: ${{ vars.SSH_KNOWN_HOSTS }}
           ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
-          hostname: ${{ case(github.ref_name == 'main', vars.HOSTNAME, format('{0}.{1}', github.ref_name, vars.HOSTNAME)) }}
+          hostname: ${{ format('{0}.{1}', github.head_ref || github.ref_name, vars.HOSTNAME) }}
           dotenv-private-key: ${{ secrets.DOTENV_PRIVATE_KEY_PRODUCTION }}
           environment: ${{ github.event.inputs.environment || 'production' }}
