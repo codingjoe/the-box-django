@@ -3,11 +3,11 @@ on:
   delete:
     branches:
   workflow_dispatch: # Allow manual trigger
-  inputs:
-    environment:
-      description: 'Target environment for deletion'
-      required: true
-      default: 'production'
+    inputs:
+      environment:
+        description: 'Target environment for deletion'
+        required: true
+        default: 'production'
 jobs:
   app:
     runs-on: ubuntu-latest
