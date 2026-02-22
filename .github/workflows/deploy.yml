@@ -12,6 +12,7 @@ on:
       environment:
         description: 'Target environment for deployment'
         required: true
+        type: environment
         default: 'production'
 concurrency:
   group: ${{ github.ref_name || github.run_id }}

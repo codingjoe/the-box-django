@@ -7,6 +7,7 @@ on:
       environment:
         description: 'Target environment for deletion'
         required: true
+        type: environment
         default: 'production'
 concurrency:
   group: ${{ github.ref_name || github.run_id }}
