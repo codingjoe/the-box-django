@@ -6,7 +6,7 @@
   </picture>
 </p>
 
-# The Box — Secure, convenient, fast & free forever!
+# The Box — Django Edition: Secure, convenient, fast & free forever!
 
 Production ready services fully managed on a RaspberryPi (or any other machine):
 
@@ -23,18 +23,21 @@ No config, no costs, just GitHub and your own server.
 
 ## Getting Started
 
+1. Use the "Use this template" button to create a new repository for your project.
+1. Make sure you have a fresh linux server (VPS or RaspberryPi) that you can connect to via SSH.
+1. Make sure you have both [GitHub CLI](https://cli.github.com/), [Docker](https://www.docker.com/) or [Podman](https://podman.io/), and [dtop](https://github.com/amir20/dtop) installed on your development.
+1. Run the installer on you development machine:
+
 ```
-bash <(curl -fsSL https://raw.githubusercontent.com/codingjoe/the-box/main/bin/install.sh)
+bash <(curl -fsSL https://the-box.sh/install.sh)
 ```
 
 The installer will guide you through the setup process and get your first application up and running in seconds!
 
-Do connect to your Docker host you use the context:
+Do connect to the Box, use:
 
-```bash
-docker context import PROJECT_NAME collaborator.dockercontext
-docker context use PROJECT_NAME
-docker ps
+```shell
+dtop
 ```
 
 ### DNS Setup
@@ -43,56 +46,8 @@ If you haven't done so already, here are the steps to set up your DNS records:
 
 ```text
 A @ YOUR_SERVER_IP
-A * YOUR_SERVER_IP
 AAAA @ YOUR_SERVER_IPV6
-AAAA * YOUR_SERVER_IPV6
-```
-
-## How it works
-
-```mermaid
----
-title: Architecture
----
-flowchart LR
-  subgraph github["🐙 GitHub"]
-    git["📦 Version Control"]
-    LB["🔄 CI/CD"]
-    env["🔐 Secrets Storage"]
-    auth["👤 Auth & Users"]
-  end
-
-  subgraph host["🐳 Docker Host"]
-    subgraph app["📱 App 1...N"]
-      web1["🌐 Web 1...N"]
-      pg["🐘 PostgreSQL"]
-      redis["⚡ Redis"]
-
-      web1 --- pg
-      web1 --- redis
-    end
-    caddy["⚖️ Caddy Load Balancer"]
-    logs["📊 Logging & Monitoring"]
-    backups["💾 Backups Service"]
-    caddy --- web1
-    caddy --- logs
-    pg --- backups
-    app --- logs
-  end
-
-  github --> host
-
-  classDef githubStyle fill:#23863699,stroke-width:0px,color:#fff
-  classDef githubServiceStyle stroke-width:0px
-  classDef hostStyle fill:#0969da99,stroke-width:0px,color:#fff
-  classDef appStyle fill:#8250df99,stroke-width:0px,color:#fff
-  classDef serviceStyle fill:#bf8700,stroke-width:0px,color:#fff
-
-  class github githubStyle
-  class host hostStyle
-  class app appStyle
-  class web1,pg,redis,caddy,logs,backups serviceStyle
-  class git,LB,env,auth githubServiceStyle
+CNAME * your.domain
 ```
 
 The Box uses a GitOps approach to deploy and manage your applications. GitHub is used as the single source of truth for application code, configuration, and secrets and authentication for staff.
