@@ -1,4 +1,4 @@
-name: The Box | Deploy Application
+name: The Box | Update
 on:
   schedule:
     - cron: '0 4 * * *' # Run daily at 4:00 AM UTC
