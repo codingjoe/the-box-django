@@ -1,3 +1,5 @@
+# https://github.com/amir20/dtop/blob/master/config.example.yaml
 hosts:
   - host: local
-    dozzle: https://logs.localhost/
+  - host: ssh://collaborator@django.the-box.sh
+sort: name

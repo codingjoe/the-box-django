@@ -1,4 +1,4 @@
-FROM ghcr.io/astral-sh/uv:0.9.5-trixie-slim AS build
+FROM ghcr.io/astral-sh/uv:0.10.4-trixie-slim AS build
 LABEL title="SMTP Server"
 LABEL license="BSD-2-Clause"
 LABEL url="https://github.com/codingjoe/the-box"
@@ -24,10 +24,7 @@ COPY . /app
 RUN --mount=type=cache,target=/root/.cache/uv uv sync --frozen --no-editable
 
 
-FROM gcr.io/distroless/cc:nonroot AS development
-
-# Dotenvx
-COPY --from=dotenv/dotenvx:v1.51.1 /usr/local/bin/dotenvx /bin
+FROM gcr.io/distroless/cc:debug-nonroot AS development
 
 # Copy binary dependencies
 COPY --from=build /dpkg /
@@ -39,13 +36,30 @@ COPY --from=build --chown=root:root /app/.venv /opt/venv
 # Create the virtual environment
 ENV VIRTUAL_ENV=/opt/venv
 ENV PATH="/opt/venv/bin:$PATH"
+ENV PORT=8000
 
 WORKDIR /app
 
-ENTRYPOINT ["dotenvx", "run", "--env-file=.env", "--", "python"]
+ENTRYPOINT ["python"]
+
+FROM build AS compile
+
+RUN apt-get install -y gettext
+
+COPY ./ /app
+
+# Compile message files
+RUN /app/.venv/bin/python -m manage compilemessages --ignore=.venv
+
+# Collect static files
+RUN /app/.venv/bin/python -m manage collectstatic --no-input
 
 FROM development AS production
 
-COPY containers/web /app
+COPY ./ /app
 
-ENTRYPOINT ["dotenvx", "run", "--env-file=.env.production", "--", "python"]
+COPY --from=compile /app/root/locale /app/root/locale
+COPY --from=compile /app/staticfiles /app/staticfiles
+
+WORKDIR /app
+ENTRYPOINT ["python"]

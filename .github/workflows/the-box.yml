@@ -1,16 +1,17 @@
-name: 📦 PostgreSQL Backup
+name: 📦 Update The Box
 on:
   schedule:
-    - cron: '0 0 * * *' # Sync daily at midnight
+    - cron: '0 4 * * *' # Run daily at 4:00 AM UTC
   workflow_dispatch: # Allow manual trigger
 concurrency:
-  group: backup
+  group: the-box-update
   cancel-in-progress: false
 jobs:
-  pg_dump:
+  update:
+    name: Update The Box
     runs-on: ubuntu-latest
     steps:
-      - uses: codingjoe/the-box/actions/backup@main
+      - uses: codingjoe/the-box/actions/update@main
         with:
           ssh-host: ${{ vars.SSH_HOSTNAME }}
           ssh-known-hosts: ${{ vars.SSH_KNOWN_HOSTS }}

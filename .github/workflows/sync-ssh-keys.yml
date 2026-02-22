@@ -1,4 +1,4 @@
-name: Sync SSH Keys
+name: 📦 Sync SSH Keys
 on:
   schedule:
     - cron: '0 * * * *' # Sync hourly
@@ -12,10 +12,12 @@ permissions:
   contents: read
 jobs:
   sync-keys:
-    uses: codingjoe/the-box/.github/workflows/sync-ssh-keys.yml@main
-    with:
-      SSH_HOSTNAME: ${{ vars.SSH_HOSTNAME }}
-      SSH_KNOWN_HOSTS: ${{ vars.SSH_KNOWN_HOSTS }}
-    secrets:
-      SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
-      GH_TOKEN: ${{ github.token }}
+    runs-on: ubuntu-latest
+    environment: ${{ github.event.inputs.environment || 'production' }}
+    steps:
+      - uses: codingjoe/the-box/actions/sync-ssh-keys@main
+        with:
+          ssh-host: ${{ vars.SSH_HOSTNAME }}
+          ssh-known-hosts: ${{ vars.SSH_KNOWN_HOSTS }}
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+          github-token: ${{ github.token }}

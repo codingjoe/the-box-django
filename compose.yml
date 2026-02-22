@@ -1,4 +1,11 @@
 include:
   - path:
-      - compose.app.yml
-      - compose.paas.yml
+      - compose.production.yml
+      - oci://docker.io/codingjoe/the-box-caddy:latest
+services:
+  web:
+    build:
+      target: development
+    command: ["-m", "manage", "runserver", "0.0.0.0:${PORT:-8000}"]
+    volumes:
+      - .:/app:cached
