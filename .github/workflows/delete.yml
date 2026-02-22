@@ -22,4 +22,4 @@ jobs:
           ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
           hostname: ${{ case(github.ref == 'refs/heads/main', vars.HOSTNAME, format('{0}.{1}', github.event.ref_name, vars.HOSTNAME)) }}
           dotenv-private-key: ${{ secrets.DOTENV_PRIVATE_KEY_PRODUCTION }}
-          environment: ${{ jobs.app.environment.name }}
+          environment: ${{ github.event.inputs.environment || 'production' }}
