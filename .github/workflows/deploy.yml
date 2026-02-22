@@ -1,4 +1,4 @@
-name: Deploy
+name: The Box | Deployment
 on:
   workflow_run:
     workflows: [ci]

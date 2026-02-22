@@ -1,4 +1,4 @@
-name: Backup
+name: The Box | PostgreSQL Backup
 on:
   schedule:
     - cron: '0 0 * * *' # Sync daily at midnight

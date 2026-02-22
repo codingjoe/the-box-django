@@ -1,4 +1,4 @@
-name: Delete Deployment
+name: The Box | Delete Deployment
 on:
   delete:
     branches:
