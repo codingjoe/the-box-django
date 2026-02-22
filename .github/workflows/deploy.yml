@@ -1,4 +1,4 @@
-name: The Box | Deployment
+name: The Box | Deploy Application
 on:
   workflow_run:
     workflows: [ci]
@@ -18,7 +18,8 @@ concurrency:
   group: ${{ github.ref_name || github.run_id }}
   cancel-in-progress: false
 jobs:
-  app:
+  deploy:
+    name: Deploy with ${{ github.event.inputs.environment || 'production' }} configuration
     runs-on: ubuntu-latest
     environment:
       name: ${{ github.event.inputs.environment || 'production' }}
