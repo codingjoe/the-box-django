@@ -19,7 +19,9 @@ concurrency:
 jobs:
   app:
     runs-on: ubuntu-latest
-    environment: ${{ github.event.inputs.environment || 'production' }}
+    environment:
+      name: ${{ github.event.inputs.environment || 'production' }}
+      url: https:${{ case(github.ref == 'refs/heads/main', vars.HOSTNAME, format('{0}.{1}', github.event.ref_name, vars.HOSTNAME)) }}
     steps:
       - uses: codingjoe/the-box/actions/deploy@main
         with:
