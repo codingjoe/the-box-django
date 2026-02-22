@@ -58,7 +58,7 @@ FROM development AS production
 
 COPY ./ /app
 
-COPY --from=compile /app/demo/locale /app/demo/locale
+COPY --from=compile /app/root/locale /app/root/locale
 COPY --from=compile /app/staticfiles /app/staticfiles
 
 WORKDIR /app
