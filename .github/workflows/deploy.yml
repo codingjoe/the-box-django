@@ -23,6 +23,7 @@ jobs:
       name: ${{ github.event.inputs.environment || 'production' }}
       url: https://${{ case(github.ref == 'refs/heads/main', vars.HOSTNAME, format('{0}.{1}', github.event.ref_name, vars.HOSTNAME)) }}
     steps:
+      - run: echo "${{ job.environment.name }}"
       - uses: codingjoe/the-box/actions/deploy@main
         with:
           ssh-host: ${{ vars.SSH_HOSTNAME }}
