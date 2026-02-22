@@ -50,11 +50,8 @@ AAAA @ YOUR_SERVER_IPV6
 CNAME * your.domain
 ```
 
-The Box uses a GitOps approach to deploy and manage your applications. GitHub is used as the single source of truth for application code, configuration, and secrets and authentication for staff.
-The [Docker] host runs the applications in lightweight containers, managed by Docker Compose. A [Caddy] load balancer handles incoming traffic, providing automatic HTTPS and routing requests to the appropriate web servers. Each application has its own PostgreSQL database and Redis instance for caching.
+Find out more at [the-box.sh](https://the-box.sh).
 
 [12-factor]: https://12factor.net/
-[caddy]: https://caddyserver.com/
 [dependabot]: https://github.com/dependabot
-[docker]: https://www.docker.com/
 [letsencrypt]: https://letsencrypt.org/
