@@ -8,18 +8,18 @@
 
 # The Box — Django Edition: Secure, convenient, fast & free forever!
 
-Production ready services fully managed on a RaspberryPi (or any other machine):
+Production ready zero-config Django deployment and development on your own hardware:
 
 - 🏗️ [12-factor] app principles
 - 🚀 continues deployment
 - 🔐 environment & key management
-- 🗄️ managed databases ([PostgreSQL], [Redis])
+- 🗄️ managed PostgreSQL databases
 - 🔔 managed [updates & security alerts][dependabot]
-- 📊 monitoring & [logging][dozzle]
 - 🔒 SSL via [Let's Encrypt][letsencrypt]
-- 🐍 [Python] & 🟢 [Node.js] support (more languages coming soon)
 
-No config, no costs, just GitHub and your own server.
+_No config, no costs, just GitHub and your own server._
+
+**Check out our Demo running on a Raspberry Pi 5 8GB: [https://django.the-box.sh](https://django.the-box.sh)**
 
 ## Getting Started
 
@@ -57,9 +57,4 @@ The [Docker] host runs the applications in lightweight containers, managed by Do
 [caddy]: https://caddyserver.com/
 [dependabot]: https://github.com/dependabot
 [docker]: https://www.docker.com/
-[dozzle]: https://dozzle.dev/
 [letsencrypt]: https://letsencrypt.org/
-[node.js]: https://nodejs.org/
-[postgresql]: https://www.postgresql.org/
-[python]: https://www.python.org/
-[redis]: https://redis.io/
