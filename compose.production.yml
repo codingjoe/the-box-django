@@ -28,7 +28,8 @@ services:
       #      migration:
       #        condition: service_completed_successfully
     labels:
-      caddy.reverse_proxy.health_uri: "/health/"
+      - "caddy.reverse_proxy.health_uri=/health/"
+      - "caddy.cache"
 #  migration:
 #    extends:
 #      service: web
