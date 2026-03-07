@@ -29,24 +29,24 @@ services:
         condition: service_completed_successfully
     labels:
       caddy.reverse_proxy.health_uri: "/health/"
-  migration:
-    extends:
-      service: web
-    restart: no
-    command: ["-m", "manage", "migrate", "--noinput"]
-    deploy: !reset
-    labels: !reset
-    depends_on: !override
-      postgres:
-        condition: service_healthy
-        required: true
-        restart: true
-      redis:
-        condition: service_healthy
-        required: true
-        restart: true
-    networks:
-      - app
-    environment:
-      DATABASE_URL: postgresql://postgres:${POSTGRES_PASSWORD}@postgres/postgres
-      REDIS_URL: redis://:${REDIS_PASSWORD}@redis/
+#  migration:
+#    extends:
+#      service: web
+#    restart: no
+#    command: ["-m", "manage", "migrate", "--noinput"]
+#    deploy: !reset
+#    labels: !reset
+#    depends_on: !override
+#      postgres:
+#        condition: service_healthy
+#        required: true
+#        restart: true
+#      redis:
+#        condition: service_healthy
+#        required: true
+#        restart: true
+#    networks:
+#      - app
+#    environment:
+#      DATABASE_URL: postgresql://postgres:${POSTGRES_PASSWORD}@postgres/postgres
+#      REDIS_URL: redis://:${REDIS_PASSWORD}@redis/
