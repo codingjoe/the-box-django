@@ -24,9 +24,9 @@ services:
       retries: 5
       start_period: 30s
       timeout: 10s
-    depends_on:
-    #      migration:
-    #        condition: service_completed_successfully
+      #    depends_on:
+      #      migration:
+      #        condition: service_completed_successfully
     labels:
       caddy.reverse_proxy.health_uri: "/health/"
 #  migration:
