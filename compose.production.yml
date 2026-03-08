@@ -30,7 +30,6 @@ services:
     labels:
       - "caddy.reverse_proxy.health_uri=/health/"
       - "caddy.cache"
-      - "caddy.cache.mode=strict"
 #  migration:
 #    extends:
 #      service: web
