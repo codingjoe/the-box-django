@@ -4,7 +4,8 @@ LABEL license="BSD-2-Clause"
 LABEL url="https://github.com/codingjoe/the-box"
 
 # Install dependencies
-RUN --mount=type=bind,source=./Aptfile,target=/tmp/Aptfile cd /tmp && apt-get update && cat Aptfile | xargs apt-get download \
+RUN --mount=type=bind,source=./Aptfile,target=/tmp/Aptfile \
+    cd /tmp && apt-get update && cat Aptfile | xargs apt-get download \
     && mkdir -p /dpkg && \
     for deb in *.deb; do dpkg --extract $deb /dpkg || exit 10; done
 
@@ -18,7 +19,10 @@ ENV UV_COMPILE_BYTECODE=1
 
 # Install Python and dependencies
 WORKDIR /app
-RUN --mount=type=cache,target=/root/.cache/uv --mount=type=bind,source=./uv.lock,target=uv.lock --mount=type=bind,source=./pyproject.toml,target=pyproject.toml uv sync --frozen --no-install-project --no-editable
+RUN --mount=type=cache,target=/root/.cache/uv \
+    --mount=type=bind,source=./uv.lock,target=uv.lock \
+    --mount=type=bind,source=./pyproject.toml,target=pyproject.toml \
+    uv sync --frozen --no-install-project --no-editable
 
 FROM gcr.io/distroless/cc:debug-nonroot AS development
 
