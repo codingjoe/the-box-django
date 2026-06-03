@@ -1,4 +1,6 @@
+import asyncio
 import base64
+import hashlib
 import logging
 import os
 import time
@@ -9,6 +11,7 @@ from html import escape
 
 import httpx
 import yaml
+from django.core.cache import cache
 from django.http import HttpResponse
 from django.views import View
 
@@ -91,7 +94,6 @@ class SponsorshipView(View):
             headers=self.headers,
             json={"query": self.QUERY, "variables": {"login": login}},
         )
-        logger.warning("Fetching sponsors for %s", response.json())
         match response.status_code, response.json():
             case 200, {"data": {"user": {"sponsors": {"nodes": nodes}}}}:
                 return [Sponsor(node["login"], node["avatarUrl"]) for node in nodes]
@@ -99,6 +101,26 @@ class SponsorshipView(View):
                 return [Sponsor(node["login"], node["avatarUrl"]) for node in nodes]
             case _:
                 return []
+
+    async def fetch_image(self, client: httpx.AsyncClient, url: str) -> str:
+        """Fetch an image and return it as a base64 encoded data URL."""
+        cache_key = f"sponsor_avatar_{hashlib.md5(url.encode()).hexdigest()}"
+        if data_url := await cache.aget(cache_key):
+            return data_url
+
+        try:
+            response = await client.get(
+                f"{url}&size={self.SIZE * 2}", follow_redirects=True
+            )
+            response.raise_for_status()
+            content_type = response.headers.get("Content-Type", "image/png")
+            base64_data = base64.b64encode(response.content).decode("utf-8")
+            data_url = f"data:{content_type};base64,{base64_data}"
+            await cache.aset(cache_key, data_url, self.TTL)
+            return data_url
+        except httpx.HTTPError as exc:
+            logger.error("Failed to fetch image %s: %s", url, exc)
+            return url
 
     async def fetch_repo_sponsors(
         self, client: httpx.AsyncClient, owner: str, repo: str
@@ -125,7 +147,9 @@ class SponsorshipView(View):
                 async for sponsor in self.fetch_repo_sponsors(client, owner, ".github"):
                     yield sponsor
 
-    async def generate_svg(self, sponsors: typing.AsyncGenerator[Sponsor]) -> bytes:
+    async def generate_svg(
+        self, sponsors: typing.AsyncGenerator[Sponsor], client: httpx.AsyncClient
+    ) -> bytes:
         """Generate a single SVG containing all sponsor images."""
         sponsor_list = [sponsor async for sponsor in sponsors]
         match sponsor_list:
@@ -137,6 +161,10 @@ class SponsorshipView(View):
                 )
             case _:
                 pass
+
+        images = await asyncio.gather(
+            *(self.fetch_image(client, s.avatar_url) for s in sponsor_list)
+        )
 
         count = len(sponsor_list)
         columns = min(count, self.BUBBLES_PER_LINE)
@@ -152,12 +180,15 @@ class SponsorshipView(View):
                 f'      <circle cx="{self.SIZE // 2}" cy="{self.SIZE // 2}" r="{self.SIZE // 2}" />',
                 "    </clipPath>",
                 "  </defs>",
-                *(self._generate_bubble(i, s) for i, s in enumerate(sponsor_list)),
+                *(
+                    self._generate_bubble(i, s, img)
+                    for i, (s, img) in enumerate(zip(sponsor_list, images))
+                ),
                 "</svg>",
             ]
         ).encode("utf-8")
 
-    def _generate_bubble(self, i: int, sponsor: Sponsor) -> str:
+    def _generate_bubble(self, i: int, sponsor: Sponsor, avatar_data: str) -> str:
         """Generate a single sponsor bubble SVG element."""
         x = self.PADDING + (i % self.BUBBLES_PER_LINE) * (self.SIZE + self.PADDING)
         y = self.PADDING + (i // self.BUBBLES_PER_LINE) * (self.SIZE + self.PADDING)
@@ -166,7 +197,7 @@ class SponsorshipView(View):
             f'    <circle cx="{x + self.SIZE // 2}" cy="{y + self.SIZE // 2}" r="{(self.SIZE + self.BORDER_WIDTH) // 2}" '
             f'fill="#fff" stroke="#3333" stroke-width="{self.BORDER_WIDTH}" />'
             f'    <g transform="translate({x}, {y})">'
-            f'      <image href="{escape(sponsor.avatar_url)}" width="{self.SIZE}" height="{self.SIZE}" clip-path="url(#circle-clip)" />'
+            f'      <image href="{escape(avatar_data)}" width="{self.SIZE}" height="{self.SIZE}" clip-path="url(#circle-clip)" />'
             f"    </g>"
             "  </a>"
         )
@@ -174,7 +205,9 @@ class SponsorshipView(View):
     async def get(self, request, owner: str, repo: str) -> HttpResponse:
         async with httpx.AsyncClient() as client:
             return HttpResponse(
-                await self.generate_svg(self.fetch_repo_sponsors(client, owner, repo)),
+                await self.generate_svg(
+                    self.fetch_repo_sponsors(client, owner, repo), client
+                ),
                 content_type="image/svg+xml",
                 headers={
                     "Cache-Control": f"public, max-age={self.TTL}",
