@@ -50,6 +50,8 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     # Third-party apps
     "health_check",
+    # First-party apps
+    "sponsors",
 ]
 
 MIDDLEWARE = [

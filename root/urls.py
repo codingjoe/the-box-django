@@ -17,7 +17,7 @@ Including another URLconf
 
 from django.conf import settings
 from django.contrib import admin
-from django.urls import path
+from django.urls import path, include
 from health_check.views import HealthCheckView
 from redis.asyncio import Redis
 
@@ -48,5 +48,6 @@ urlpatterns = [
         ),
         name="health",
     ),
+    path("", include("sponsors.urls")),
     path("admin/", admin.site.urls),
 ]
