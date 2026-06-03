@@ -9,7 +9,9 @@ dependencies = [
     "django-environ>=0.13.0",
     "django-health-check[psutil,redis]>=4.0.4",
     "granian>=2.7.4",
+    "httpx>=0.28.1",
     "psycopg[binary]>=3.3.3",
+    "pyyaml>=6.0.3",
     "redis>=7.2.0",
     "whitenoise>=6.11.0",
 ]
