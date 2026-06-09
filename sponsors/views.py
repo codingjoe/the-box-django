@@ -151,7 +151,7 @@ class SponsorshipView(View):
         self, sponsors: typing.AsyncGenerator[Sponsor], client: httpx.AsyncClient
     ) -> bytes:
         """Generate a single SVG containing all sponsor images."""
-        sponsor_list = [sponsor async for sponsor in sponsors]
+        sponsor_list = {sponsor async for sponsor in sponsors}
         match sponsor_list:
             case []:
                 return (
