@@ -32,9 +32,12 @@ SECRET_KEY = env("SECRET_KEY", default="django-insecure-!@#$%^&*()_+")
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = env("DEBUG")
 
-ALLOWED_HOSTS = env.list(
-    "ALLOWED_HOSTS", default=[] if DEBUG else [env("HOSTNAME", default="localhost")]
-)
+ALLOWED_HOSTS = [
+    h.strip()
+    for h in env.list(
+        "ALLOWED_HOSTS", default=[] if DEBUG else [env("HOSTNAME", default="localhost")]
+    )
+]
 
 USE_X_FORWARDED_HOST = True
 SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
