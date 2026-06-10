@@ -37,6 +37,9 @@ class SponsorshipView(View):
     FALLBACK_URL = (
         "https://api.github.com/repos/{owner}/.github/contents/.github/FUNDING.yml"
     )
+    FALLBACK_ROOT_URL = (
+        "https://api.github.com/repos/{owner}/.github/contents/FUNDING.yml"
+    )
     QUERY = """
         query($login: String!) {
           user: user(login: $login) {
@@ -126,26 +129,33 @@ class SponsorshipView(View):
         self, client: httpx.AsyncClient, owner: str, repo: str
     ) -> typing.AsyncGenerator[Sponsor, None]:
         """Fetch sponsors from a repository's FUNDING.yml file."""
-        response = await client.get(
-            self.REPO_URL.format(owner=owner, repo=repo),
-            headers=self.headers,
-        )
+        urls = [self.REPO_URL.format(owner=owner, repo=repo)]
+        if repo != ".github":
+            urls.extend(
+                [
+                    self.FALLBACK_URL.format(owner=owner),
+                    self.FALLBACK_ROOT_URL.format(owner=owner),
+                ]
+            )
 
-        match response.status_code:
-            case 200:
-                content = base64.b64decode(response.json()["content"]).decode("utf-8")
-                authors = yaml.safe_load(content).get("github", [])
-                if isinstance(authors, list):
-                    for author in authors:
-                        for sponsor in await self.fetch_user_sponsors(client, author):
+        for url in urls:
+            response = await client.get(url, headers=self.headers)
+
+            match response.status_code:
+                case 200:
+                    content = base64.b64decode(response.json()["content"]).decode("utf-8")
+                    authors = yaml.safe_load(content).get("github", [])
+                    if isinstance(authors, list):
+                        for author in authors:
+                            for sponsor in await self.fetch_user_sponsors(client, author):
+                                yield sponsor
+                    else:
+                        for sponsor in await self.fetch_user_sponsors(client, authors):
                             yield sponsor
-                else:
-                    for sponsor in await self.fetch_user_sponsors(client, authors):
-                        yield sponsor
+                    return
 
-            case 404 if repo != ".github":
-                async for sponsor in self.fetch_repo_sponsors(client, owner, ".github"):
-                    yield sponsor
+                case 404:
+                    continue
 
     async def generate_svg(
         self, sponsors: typing.AsyncGenerator[Sponsor], client: httpx.AsyncClient
