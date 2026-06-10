@@ -30,7 +30,7 @@ services:
       #      migration:
       #        condition: service_completed_successfully
     labels:
-      - "caddy=sponsor.pics"
+      - "caddy=${ALLOWED_HOSTS:-$HOSTNAME}"
       - "caddy.reverse_proxy.health_uri=/health/"
       - "caddy.cache"
 #  migration:
