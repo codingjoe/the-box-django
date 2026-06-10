@@ -60,5 +60,6 @@ urlpatterns = [
         ),
     ),
     path("", include("sponsors.urls")),
+    path("sponsors/", include("sponsors.urls")),
     path("admin/", admin.site.urls),
 ]
