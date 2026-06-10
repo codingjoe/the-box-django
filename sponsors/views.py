@@ -143,7 +143,7 @@ class SponsorshipView(View):
                     for sponsor in await self.fetch_user_sponsors(client, authors):
                         yield sponsor
 
-            case 404:
+            case 404 if repo != ".github":
                 async for sponsor in self.fetch_repo_sponsors(client, owner, ".github"):
                     yield sponsor
 

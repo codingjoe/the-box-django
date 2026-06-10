@@ -13,7 +13,7 @@ services:
         UV_NO_DEV: 0
     environment:
       HOSTNAME: ${HOSTNAME:-localhost}
-      ALLOWED_HOSTS: ${ALLOWED_HOSTS}
+      ALLOWED_HOSTS: ${ALLOWED_HOSTS:-${HOSTNAME:-localhost}}
       GRANIAN_INTERFACE: asgi # Options: asgi, wsgi, rsgi (default)
       GRANIAN_LOG_ACCESS_ENABLED: true
       GRANIAN_WORKERS: ${WEB_CONCURRENCY:-2}
@@ -30,7 +30,6 @@ services:
       #      migration:
       #        condition: service_completed_successfully
     labels:
-      - "caddy=${ALLOWED_HOSTS:-${HOSTNAME:-localhost}}"
       - "caddy.reverse_proxy.health_uri=/health/"
       - "caddy.cache"
 #  migration:

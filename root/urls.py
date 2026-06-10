@@ -23,30 +23,41 @@ from redis.asyncio import Redis
 
 urlpatterns = [
     path(
-        "",
-        HealthCheckView.as_view(
-            checks=[
-                "health_check.Cache",
-                "health_check.Database",
-                "health_check.contrib.psutil.Disk",
-                "health_check.contrib.psutil.Memory",
-                (
-                    "health_check.contrib.redis.Redis",
-                    {"client_factory": lambda: Redis.from_url(settings.REDIS_URL)},
+        "health/",
+        include(
+            [
+                path(
+                    "django/",
+                    HealthCheckView.as_view(
+                        checks=[
+                            "health_check.Cache",
+                            "health_check.Database",
+                            "health_check.contrib.psutil.Disk",
+                            "health_check.contrib.psutil.Memory",
+                            (
+                                "health_check.contrib.redis.Redis",
+                                {
+                                    "client_factory": lambda: Redis.from_url(
+                                        settings.REDIS_URL
+                                    )
+                                },
+                            ),
+                        ]
+                    ),
+                    name="home",
+                ),
+                path(
+                    "",
+                    HealthCheckView.as_view(
+                        checks=[
+                            "health_check.contrib.psutil.Disk",
+                            "health_check.contrib.psutil.Memory",
+                        ]
+                    ),
+                    name="health",
                 ),
             ]
         ),
-        name="home",
-    ),
-    path(
-        "health/",
-        HealthCheckView.as_view(
-            checks=[
-                "health_check.contrib.psutil.Disk",
-                "health_check.contrib.psutil.Memory",
-            ]
-        ),
-        name="health",
     ),
     path("", include("sponsors.urls")),
     path("admin/", admin.site.urls),
