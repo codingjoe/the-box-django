@@ -143,11 +143,15 @@ class SponsorshipView(View):
 
             match response.status_code:
                 case 200:
-                    content = base64.b64decode(response.json()["content"]).decode("utf-8")
+                    content = base64.b64decode(response.json()["content"]).decode(
+                        "utf-8"
+                    )
                     authors = yaml.safe_load(content).get("github", [])
                     if isinstance(authors, list):
                         for author in authors:
-                            for sponsor in await self.fetch_user_sponsors(client, author):
+                            for sponsor in await self.fetch_user_sponsors(
+                                client, author
+                            ):
                                 yield sponsor
                     else:
                         for sponsor in await self.fetch_user_sponsors(client, authors):
