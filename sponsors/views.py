@@ -15,7 +15,6 @@ from django.core.cache import cache
 from django.http import HttpResponse
 from django.views import View
 
-
 logger = logging.getLogger(__name__)
 
 
@@ -127,7 +126,7 @@ class SponsorshipView(View):
 
     async def fetch_repo_sponsors(
         self, client: httpx.AsyncClient, owner: str, repo: str
-    ) -> typing.AsyncGenerator[Sponsor, None]:
+    ) -> typing.AsyncGenerator[Sponsor]:
         """Fetch sponsors from a repository's FUNDING.yml file."""
         urls = [self.REPO_URL.format(owner=owner, repo=repo)]
         if repo != ".github":
