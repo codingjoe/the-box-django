@@ -19,7 +19,7 @@ Production ready zero-config Django deployment and development on your own hardw
 
 _No config, no costs, just GitHub and your own server._
 
-**Check out our Demo running on a Raspberry Pi 5 8GB: [https://django.the-box.sh](https://django.the-box.sh)**
+**Check out our Demo running on a Raspberry Pi 5 8GB: [https://sponsor.pics/](https://sponsor.pics/)**
 
 ## Getting Started
 
