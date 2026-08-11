@@ -6,7 +6,6 @@ import os
 import time
 import typing
 from dataclasses import dataclass
-from functools import lru_cache
 from html import escape
 
 import httpx
@@ -81,12 +80,11 @@ class SponsorshipView(View):
     BUBBLES_PER_LINE = 12
     TTL = 60 * 60 * 24  # 1 day
 
-    headers = {
+    headers: typing.ClassVar[dict[str, str]] = {
         "Authorization": f"Bearer {os.getenv('GITHUB_TOKEN')}",
         "Content-Type": "application/json",
     }
 
-    @lru_cache(maxsize=1024)
     async def fetch_user_sponsors(
         self, client: httpx.AsyncClient, login: str
     ) -> list[Sponsor]:
