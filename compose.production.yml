@@ -3,8 +3,8 @@ include:
   - oci://docker.io/codingjoe/the-box-redis:main
 services:
   web:
-    pull_policy: build
-    image: !reset
+    image: ghcr.io/codingjoe/the-box-django:${IMAGE_TAG:-local}
+    pull_policy: always
     build:
       context: .
       dockerfile: Dockerfile

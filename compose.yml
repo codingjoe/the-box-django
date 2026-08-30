@@ -4,6 +4,7 @@ include:
       - oci://docker.io/codingjoe/the-box:main
 services:
   web:
+    pull_policy: build
     build:
       target: development
     command: ["-m", "manage", "runserver", "0.0.0.0:${PORT:-8000}"]
