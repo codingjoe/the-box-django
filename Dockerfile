@@ -1,4 +1,4 @@
-FROM ghcr.io/astral-sh/uv:0.12.14-trixie-slim AS build
+FROM ghcr.io/astral-sh/uv:0.12.17-trixie-slim AS build
 LABEL title="SMTP Server"
 LABEL license="BSD-2-Clause"
 LABEL url="https://github.com/codingjoe/the-box"
