@@ -6,8 +6,8 @@ LABEL url="https://github.com/codingjoe/the-box"
 # Install dependencies
 RUN --mount=type=bind,source=./Aptfile,target=/tmp/Aptfile \
     cd /tmp && apt-get update && cat Aptfile | xargs apt-get download \
-    && mkdir -p /dpkg && \
-    for deb in *.deb; do dpkg --extract $deb /dpkg || exit 10; done
+    && mkdir -p /dpkg \
+    && for deb in *.deb; do dpkg --extract $deb /dpkg || exit 10; done
 
 # UV
 ARG UV_NO_DEV
